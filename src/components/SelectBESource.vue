@@ -4,28 +4,25 @@ import Select from 'primevue/select'
 const options = [
   {
     name: 'Production',
-    value: 'https://fw.tv/ava.html'
+    value: 'fwparam_api_host=https://fireworkapi1.com'
   },
   {
     name: 'Staging',
-    value: 'https://fw-staging.tv/ava.html'
+    value: 'fwparam_api_host=https://staging.fireworktv.com'
   },
   {
-    name: 'Master',
-    value: 'https://zeffo-git-master-firework.vercel.app/ava.html'
+    name: 'Dev',
+    value: 'fwparam_api_host=https://dev.fireworktv.com'
   }
 ]
 
-const selectedFESource = defineModel()
-if (selectedFESource.value === undefined) {
-  selectedFESource.value = options[0].value
-}
+const selectedBESource = defineModel()
 </script>
 
 <template>
   <div>
     <Select
-      v-model="selectedFESource"
+      v-model="selectedBESource"
       :options="options"
       optionLabel="name"
       optionValue="value"

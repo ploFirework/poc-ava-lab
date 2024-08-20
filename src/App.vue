@@ -3,6 +3,8 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
+  <p class="text-green-400 text-4xl">AVA Lab</p>
+
   <RouterView />
   <!-- 
   <header>
