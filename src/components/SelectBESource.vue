@@ -4,15 +4,15 @@ import Select from 'primevue/select'
 const options = [
   {
     name: 'Production',
-    value: 'fwparam_api_host=https://fireworkapi1.com'
+    value: 'api_host=https://fireworkapi1.com'
   },
   {
     name: 'Staging',
-    value: 'fwparam_api_host=https://staging.fireworktv.com'
+    value: 'api_host=https://staging.fireworktv.com'
   },
   {
     name: 'Dev',
-    value: 'fwparam_api_host=https://dev.fireworktv.com'
+    value: 'api_host=https://dev.fireworktv.com'
   }
 ]
 

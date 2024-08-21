@@ -8,12 +8,20 @@ import { ref, computed } from 'vue'
 import Fieldset from 'primevue/fieldset'
 import Panel from 'primevue/panel'
 
-const FESource = ref('https://fw.tv/ava.html')
-const reqPar_backEndApi = ref('fwparam_api_host=https://fireworkapi1.com')
-const reqPar_domainAssistantId = ref('')
+const feSource = ref('https://fw.tv')
+const beApiAsParam = ref('api_host:https://fireworkapi1.com')
+const domainAssistantId = ref('')
+const domainAssistantIdAsParam = computed(() => {
+  return domainAssistantId.value ? `domain_assistant_id=${domainAssistantId.value}` : ''
+})
 
-const requestParams = computed(() => {
-  return `?${reqPar_backEndApi.value}&${reqPar_domainAssistantId.value}`
+const reqParams = computed(() => {
+  const arr = [beApiAsParam, domainAssistantIdAsParam]
+  if (domainAssistantIdAsParam) {
+    arr.push(domainAssistantIdAsParam)
+  }
+
+  return arr
 })
 </script>
 
@@ -21,12 +29,12 @@ const requestParams = computed(() => {
   <main id="ava-lab">
     <div id="header">
       <Fieldset legend="Front-End Source">
-        <SelectFESource v-model="FESource" />
+        <SelectFESource v-model="feSource" />
       </Fieldset>
       <Fieldset legend="Back-End API">
         <div class="backendGrid">
-          <SelectBESource v-model="reqPar_backEndApi" />
-          <InputDomainAssistant v-model="reqPar_domainAssistantId" />
+          <SelectBESource v-model="beApiAsParam" />
+          <InputDomainAssistant v-model="domainAssistantId" />
         </div>
       </Fieldset>
     </div>
@@ -34,7 +42,7 @@ const requestParams = computed(() => {
     <Panel id="avaSettings"></Panel>
 
     <Panel id="avaLoader">
-      <AvaLoader :fe-source="FESource" :request-params="requestParams" />
+      <AvaLoader :fe-source="feSource" :reqParams="reqParams" />
     </Panel>
   </main>
 </template>
