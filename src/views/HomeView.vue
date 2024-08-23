@@ -9,20 +9,16 @@ import Fieldset from 'primevue/fieldset'
 import Panel from 'primevue/panel'
 
 const feSource = ref('https://fw.tv')
-const beApiAsParam = ref('api_host:https://fireworkapi1.com')
+const beApiAsParam = ref('https://fireworkapi1.com')
 const domainAssistantId = ref('')
 const domainAssistantIdAsParam = computed(() => {
   return domainAssistantId.value ? `domain_assistant_id=${domainAssistantId.value}` : ''
 })
 
-const reqParams = computed(() => {
-  const arr = [beApiAsParam, domainAssistantIdAsParam]
-  if (domainAssistantIdAsParam) {
-    arr.push(domainAssistantIdAsParam)
-  }
-
-  return arr
-})
+const reqParams = computed(() => ({
+  api_host: beApiAsParam.value,
+  domain_assistant_id: domainAssistantId.value || ''
+}))
 </script>
 
 <template>
