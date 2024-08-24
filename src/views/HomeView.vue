@@ -8,15 +8,12 @@ import { ref, computed } from 'vue'
 import Fieldset from 'primevue/fieldset'
 import Panel from 'primevue/panel'
 
-const feSource = ref('https://fw.tv')
-const beApiAsParam = ref('https://fireworkapi1.com')
-const domainAssistantId = ref('')
-const domainAssistantIdAsParam = computed(() => {
-  return domainAssistantId.value ? `domain_assistant_id=${domainAssistantId.value}` : ''
-})
+const feSource = ref('https://fw-staging.tv')
+const beApiSource = ref('https://staging.fireworktv.com')
+const domainAssistantId = ref('gKlqNv')
 
 const reqParams = computed(() => ({
-  api_host: beApiAsParam.value,
+  api_host: beApiSource.value,
   domain_assistant_id: domainAssistantId.value || ''
 }))
 </script>
@@ -29,7 +26,7 @@ const reqParams = computed(() => ({
       </Fieldset>
       <Fieldset legend="Back-End API">
         <div class="backendGrid">
-          <SelectBESource v-model="beApiAsParam" />
+          <SelectBESource v-model="beApiSource" />
           <InputDomainAssistant v-model="domainAssistantId" />
         </div>
       </Fieldset>

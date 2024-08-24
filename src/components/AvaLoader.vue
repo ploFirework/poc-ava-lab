@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, computed, ref, onUpdated } from 'vue'
+import { defineProps, computed, ref, onUpdated, onMounted } from 'vue'
 
 const props = defineProps<{
   feSource: string
@@ -19,7 +19,8 @@ const previewUrl = computed(() => {
 })
 
 const iframeRef = ref<HTMLIFrameElement>()
-onUpdated(() => {
+
+function renderAvaWidget() {
   if (iframeRef.value) {
     console.log('iframeRef.value', iframeRef.value)
     const iframeDoc = iframeRef.value.contentDocument
@@ -38,6 +39,7 @@ onUpdated(() => {
           fwAva.setAttribute(key, val)
         })
         fwAva.setAttribute('headless', 'true')
+        fwAva.setAttribute('load_origin', 'ava-lab')
         //fwAva.setAttribute('lang', lang)
 
         iframeDoc.body.appendChild(fwAva)
@@ -57,7 +59,9 @@ onUpdated(() => {
       }
     }
   }
-})
+}
+onMounted(renderAvaWidget)
+onUpdated(renderAvaWidget)
 </script>
 
 <template>
