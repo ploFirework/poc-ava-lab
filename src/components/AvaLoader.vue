@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import { defineProps, computed, ref, onUpdated, onMounted } from 'vue'
 
+import { type Layout } from '@/components/SelectLayout.vue'
+
 const props = defineProps<{
   feSource: string
-  reqParams: Record<string, string>
+  reqParams: Partial<{
+    api_host: string
+    domain_assistant_id: string
+    layout: Layout
+  }>
 }>()
 
 const previewUrl = computed(() => {
@@ -36,26 +42,37 @@ function renderAvaWidget() {
       script.onload = () => {
         const fwAva = iframeDoc.createElement('fw-ava')
         Object.entries(props.reqParams).forEach(([key, val]) => {
+          if (key === 'layout') {
+            if (val === 'headless') {
+              fwAva.setAttribute('headless', 'true')
+            } else {
+              fwAva.setAttribute('layout', val)
+            }
+
+            return
+          }
+
           fwAva.setAttribute(key, val)
         })
-        fwAva.setAttribute('headless', 'true')
         fwAva.setAttribute('load_origin', 'ava-lab')
         //fwAva.setAttribute('lang', lang)
-
         iframeDoc.body.appendChild(fwAva)
-        const interval = setInterval(() => {
-          const shadowRoot = fwAva.shadowRoot
-          if (shadowRoot) {
-            // @ts-ignore
-            iframeWindow?._fwn.ava.actions.showWidget({
-              domain_assistant_id: props.reqParams.domain_assistant_id
-            })
-            const modal = iframeDoc.querySelector('fw-ava-modal')
-            if (modal) {
-              clearInterval(interval)
+
+        if (props.reqParams.layout === 'headless') {
+          const interval = setInterval(() => {
+            const shadowRoot = fwAva.shadowRoot
+            if (shadowRoot) {
+              // @ts-ignore
+              iframeWindow?._fwn.ava.actions.showWidget({
+                domain_assistant_id: props.reqParams.domain_assistant_id
+              })
+              const modal = iframeDoc.querySelector('fw-ava-modal')
+              if (modal) {
+                clearInterval(interval)
+              }
             }
-          }
-        }, 1000)
+          }, 1000)
+        }
       }
     }
   }

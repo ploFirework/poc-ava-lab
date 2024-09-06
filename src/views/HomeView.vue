@@ -2,6 +2,7 @@
 import AvaLoader from '@/components/AvaLoader.vue'
 import SelectFESource from '@/components/SelectFESource.vue'
 import SelectBESource from '@/components/SelectBESource.vue'
+import SelectLayout, { type Layout } from '@/components/SelectLayout.vue'
 import InputDomainAssistant from '@/components/InputDomainAssistant.vue'
 import { ref, computed } from 'vue'
 
@@ -11,10 +12,12 @@ import Panel from 'primevue/panel'
 const feSource = ref('https://fw-staging.tv')
 const beApiSource = ref('https://staging.fireworktv.com')
 const domainAssistantId = ref('gKlqNv')
+const layout = ref<Layout>('cta')
 
 const reqParams = computed(() => ({
   api_host: beApiSource.value,
-  domain_assistant_id: domainAssistantId.value || ''
+  domain_assistant_id: domainAssistantId.value || '',
+  layout: layout.value
 }))
 </script>
 
@@ -30,6 +33,7 @@ const reqParams = computed(() => ({
           <InputDomainAssistant v-model="domainAssistantId" />
         </div>
       </Fieldset>
+      <SelectLayout v-model="layout" />
     </div>
 
     <Panel id="avaSettings"></Panel>
@@ -53,7 +57,7 @@ const reqParams = computed(() => ({
     grid-area: header;
 
     display: grid;
-    grid-template: 100px / 1fr 2fr;
+    grid-template: 100px / 1fr 2fr 1fr;
     grid-gap: 10px;
     align-items: center;
 
