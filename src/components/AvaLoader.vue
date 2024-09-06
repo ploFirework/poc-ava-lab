@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, computed, ref, onUpdated, onMounted } from 'vue'
+import { defineProps, ref, onUpdated, onMounted } from 'vue'
 
 import { type Layout } from '@/components/SelectLayout.vue'
 
@@ -11,18 +11,6 @@ const props = defineProps<{
     layout: Layout
   }>
 }>()
-
-const previewUrl = computed(() => {
-  const reqParamsStr = Object.entries(props.reqParams).reduce((acc, [key, val]) => {
-    if (!!key && !!val) {
-      return acc + `${key}=${val}&`
-    } else {
-      return acc
-    }
-  }, '?')
-
-  return `${props.feSource}/ava.html${reqParamsStr} `
-})
 
 const iframeRef = ref<HTMLIFrameElement>()
 
@@ -82,16 +70,21 @@ onUpdated(renderAvaWidget)
 </script>
 
 <template>
-  {{ previewUrl }}
-  <!-- <iframe id="ava-container" :src="previewUrl"></iframe> -->
-
-  <iframe id="ava-container" ref="iframeRef" :key="previewUrl" />
+  <div id="ava-loader">
+    <iframe id="ava-container" ref="iframeRef" :key="previewUrl" />
+  </div>
 </template>
 
 <style scoped>
-#ava-container {
-  aspect-ratio: 8/16;
+#ava-loader {
   width: 100%;
-  height: 90vh;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#ava-container {
+  background: white;
+  flex-grow: 1;
 }
 </style>

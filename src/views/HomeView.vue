@@ -3,6 +3,7 @@ import AvaLoader from '@/components/AvaLoader.vue'
 import SelectFESource from '@/components/SelectFESource.vue'
 import SelectBESource from '@/components/SelectBESource.vue'
 import SelectLayout, { type Layout } from '@/components/SelectLayout.vue'
+import CopyUrlButton from '@/components/CopyUrlButton.vue'
 import InputDomainAssistant from '@/components/InputDomainAssistant.vue'
 import { ref, computed } from 'vue'
 
@@ -33,31 +34,35 @@ const reqParams = computed(() => ({
           <InputDomainAssistant v-model="domainAssistantId" />
         </div>
       </Fieldset>
-      <SelectLayout v-model="layout" />
     </div>
 
     <Panel id="avaSettings"></Panel>
 
-    <Panel id="avaLoader">
-      <AvaLoader :fe-source="feSource" :reqParams="reqParams" />
-    </Panel>
+    <div id="avaLoaderContainer">
+      <SelectLayout v-model="layout" />
+      <CopyUrlButton :fe-source="feSource" :reqParams="reqParams" class="CopyUrlButton" />
+      <AvaLoader :fe-source="feSource" :reqParams="reqParams" class="AvaLoader" />
+    </div>
+
+    <Panel id="avaLogs"></Panel>
   </main>
 </template>
 
 <style scoped>
 #ava-lab {
+  height: 98%;
   display: grid;
-  grid-template: 100px / 25% auto;
-  grid-gap: 10px;
+  grid-template: 100px / 1fr 2fr 1fr;
+  grid-gap: 1rem;
   grid-template-areas:
-    'header header'
-    'avaSettings avaLoader';
+    'header header header'
+    'avaSettings avaLoader avaLogs';
 
   #header {
     grid-area: header;
 
     display: grid;
-    grid-template: 100px / 1fr 2fr 1fr;
+    grid-template: 100px / 1fr 2fr;
     grid-gap: 10px;
     align-items: center;
 
@@ -72,8 +77,25 @@ const reqParams = computed(() => ({
     grid-area: avaSettings;
   }
 
-  #avaLoader {
+  #avaLoaderContainer {
     grid-area: avaLoader;
+
+    display: grid;
+    grid-template: auto 1fr / 1fr 1fr;
+    justify-items: start;
+    align-items: center;
+
+    .CopyUrlButton {
+      justify-self: end;
+    }
+
+    .AvaLoader {
+      grid-column: 1 / 3;
+    }
+  }
+
+  #avaLogs {
+    grid-area: avaLogs;
   }
 }
 </style>

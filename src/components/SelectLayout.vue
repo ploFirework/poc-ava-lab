@@ -1,11 +1,8 @@
 <template>
-  <Fieldset legend="Layout">
-    <SelectButton v-model="selectedLayout" :options="layoutOptions" aria-labelledby="basic" />
-  </Fieldset>
+  <SelectButton v-model="selectedLayout" :options="layoutOptions" aria-labelledby="basic" />
 </template>
 
 <script setup lang="ts">
-import Fieldset from 'primevue/fieldset'
 import SelectButton from 'primevue/selectbutton'
 
 export type Layout = 'cta' | 'faq' | 'carousel' | 'headless'
