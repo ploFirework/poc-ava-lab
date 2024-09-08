@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref, onUpdated, onMounted } from 'vue'
+import { defineProps, computed, ref, onUpdated, onMounted } from 'vue'
 
 import { type Layout } from '@/components/SelectLayout.vue'
 
@@ -12,11 +12,35 @@ const props = defineProps<{
   }>
 }>()
 
+const previewUrl = computed(() => {
+  const reqParamsStr = Object.entries(props.reqParams).reduce((acc, [key, val]) => {
+    if (!!key && !!val) {
+      if (key === 'layout') {
+        if (val === 'headless') {
+          return acc + 'headless=true&'
+        } else {
+          return acc + `layout=${val}&`
+        }
+      }
+
+      return acc + `${key}=${val}&`
+    } else {
+      return acc
+    }
+  }, '?')
+
+  return `${props.feSource}/ava.html${reqParamsStr} `
+})
+
 const iframeRef = ref<HTMLIFrameElement>()
+const avaRef = ref<HTMLElement>()
 
 function renderAvaWidget() {
+  if (avaRef.value) {
+    avaRef.value.parentNode?.removeChild(avaRef.value)
+  }
+
   if (iframeRef.value) {
-    console.log('iframeRef.value', iframeRef.value)
     const iframeDoc = iframeRef.value.contentDocument
     const iframeWindow = iframeRef.value.contentWindow
     //const lang = props.lang
@@ -28,7 +52,12 @@ function renderAvaWidget() {
       iframeDoc.body.appendChild(script)
 
       script.onload = () => {
+        if (avaRef.value) {
+          avaRef.value.parentNode?.removeChild(avaRef.value)
+        }
         const fwAva = iframeDoc.createElement('fw-ava')
+        avaRef.value = fwAva
+
         Object.entries(props.reqParams).forEach(([key, val]) => {
           if (key === 'layout') {
             if (val === 'headless') {
@@ -42,7 +71,7 @@ function renderAvaWidget() {
 
           fwAva.setAttribute(key, val)
         })
-        fwAva.setAttribute('load_origin', 'ava-lab')
+        avaRef.value.setAttribute('load_origin', 'ava-lab')
         //fwAva.setAttribute('lang', lang)
         iframeDoc.body.appendChild(fwAva)
 
@@ -71,7 +100,7 @@ onUpdated(renderAvaWidget)
 
 <template>
   <div id="ava-loader">
-    <iframe id="ava-container" ref="iframeRef" :key="previewUrl" />
+    <iframe id="ava-container" ref="iframeRef" />
   </div>
 </template>
 

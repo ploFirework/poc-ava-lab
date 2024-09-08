@@ -3,7 +3,6 @@ import AvaLoader from '@/components/AvaLoader.vue'
 import SelectFESource from '@/components/SelectFESource.vue'
 import SelectBESource from '@/components/SelectBESource.vue'
 import SelectLayout, { type Layout } from '@/components/SelectLayout.vue'
-import CopyUrlButton from '@/components/CopyUrlButton.vue'
 import InputDomainAssistant from '@/components/InputDomainAssistant.vue'
 import { ref, computed } from 'vue'
 
@@ -20,6 +19,26 @@ const reqParams = computed(() => ({
   domain_assistant_id: domainAssistantId.value || '',
   layout: layout.value
 }))
+
+const previewUrl = computed(() => {
+  const reqParamsStr = Object.entries(reqParams).reduce((acc, [key, val]) => {
+    if (!!key && !!val) {
+      if (key === 'layout') {
+        if (val === 'headless') {
+          return acc + 'headless=true&'
+        } else {
+          return acc + `layout=${val}&`
+        }
+      }
+
+      return acc + `${key}=${val}&`
+    } else {
+      return acc
+    }
+  }, '?')
+
+  return `${feSource}/ava.html${reqParamsStr} `
+})
 </script>
 
 <template>
@@ -40,8 +59,11 @@ const reqParams = computed(() => ({
 
     <div id="avaLoaderContainer">
       <SelectLayout v-model="layout" />
-      <CopyUrlButton :fe-source="feSource" :reqParams="reqParams" class="CopyUrlButton" />
-      <AvaLoader :fe-source="feSource" :reqParams="reqParams" class="AvaLoader" />
+      <a :href="previewUrl" :title="previewUrl">
+        <i class="pi pi-share-alt" />
+      </a>
+
+      <AvaLoader :fe-source="feSource" :reqParams="reqParams" :key="previewUrl" class="AvaLoader" />
     </div>
 
     <Panel id="avaLogs"></Panel>
@@ -82,11 +104,15 @@ const reqParams = computed(() => ({
 
     display: grid;
     grid-template: auto 1fr / 1fr 1fr;
+    grid-gap: 1rem;
     justify-items: start;
     align-items: center;
 
     .CopyUrlButton {
       justify-self: end;
+      i {
+        font-size: 1.5rem;
+      }
     }
 
     .AvaLoader {

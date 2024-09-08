@@ -1,1 +1,1 @@
-export { useDomainAssistantIdStore } from './domainAssistantIdStore'
+export { previewUrl } from './previewUrl'
